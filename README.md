@@ -1,4 +1,4 @@
-# 🌶️ Sistem Pakar Diagnosa Penyakit Bibit Cabai (Certainty Factor)
+# 🌶️ Sistem Pakar Diagnosa Penyakit Bibit Tanaman Cabai (Certainty Factor)
 ### Rumah Semai Helly Seedling — Desa Sri Sawahan, Lampung Tengah
 
 ![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
@@ -9,74 +9,47 @@
 
 ---
 
-## 📌 Ringkasan Proyek
-
-Sistem Pakar Diagnosa Penyakit Bibit Tanaman Cabai ini dikembangkan berbasis web untuk membantu operasional rumah semai **Helly Seedling** di Desa Sri Sawahan, Kec. Punggur, Kab. Lampung Tengah. Sistem ini menerapkan metode inferensi **Forward Chaining** yang dipadukan dengan perhitungan derajat kepastian **Certainty Factor (CF)** untuk mendiagnosis 5 jenis penyakit krusial pada bibit cabai secara presisi, menyajikan SOP penanganan cepat, mengelola surat tugas tindakan semprot/isolasi, dan memantau status kesehatan seluruh petak semai secara *real-time*.
+## 📥 File Dokumen Laporan Skripsi / UTS
+Untuk kemudahan pengujian dan evaluasi akademik, file naskah dokumen laporan lengkap tersedia langsung di root repositori:
+* 📘 **[Download Naskah Microsoft Word (.docx)](LAPORAN_LENGKAP_SISTEM_PAKAR.docx)** *(Format Standar Skripsi A4, Margin 4-3-3-3, Times New Roman 12pt, Cover Lengkap, dan 4 Diagram Visual Tersemat)*
+* 📄 **[Buka Naskah Laporan Markdown (.md)](LAPORAN_LENGKAP_SISTEM_PAKAR.md)**
 
 ---
 
 ## 👨‍💻 Identitas Pengembang & Proyek
-
-* **Penyusun:** Dedy Dzulkarnain (NPM: 22430059)
-* **Program Studi:** S1 Ilmu Komputer, Fakultas Ilmu Komputer, Universitas Muhammadiyah Metro
+* **Penulis / Pengembang:** Dedy Dzulkarnain
+* **NPM:** 22430059
+* **Program Studi:** S1 Ilmu Komputer
+* **Fakultas:** Fakultas Ilmu Komputer, Universitas Muhammadiyah Metro
+* **Tahun Akademik:** 2026
 * **Mata Kuliah:** Basis Data Lanjut (UTS) & Naskah Proyek Skripsi
-* **Narasumber Pakar:** Bpk. Helly Sumanto (Kepala Rumah Semai) & Bpk. Ino (Pakar Tanaman)
-* **Dokumen Lengkap:** 
-  * 📥 **[Download File Word (.docx)](docs/laporan/LAPORAN_LENGKAP_SISTEM_PAKAR.docx)** *(Format Standar Skripsi A4 + 4 Diagram Lengkap)*
-  * 📄 **[Baca Laporan Markdown (.md)](docs/laporan/LAPORAN_LENGKAP_SISTEM_PAKAR.md)**
-  * 📁 **[Jelajahi Folder Dokumen Laporan](docs/laporan/)**
+* **Narasumber Pakar:** 
+  1. Bpk. Helly Sumanto (Kepala Rumah Semai Helly Seedling)
+  2. Bpk. Ino (Pakar Tanaman & Patologi Bibit)
 
 ---
 
-## ✨ Fitur-Fitur Utama
+## 📸 Tangkapan Layar Aplikasi (Screenshots)
 
-1. **Role-Based Access Control (RBAC):**
-   * **Pengawas / Pakar Kebun:** Akses penuh ke seluruh menu (Dashboard, Master Petak Semai, Master Penyakit & Gejala, Aturan Basis Pengetahuan & CF Pakar, Audit Log Perubahan Aturan, Riwayat Diagnosa, serta Penerbitan Surat Tugas Tindakan & Verifikasi Pemulihan Petak).
-   * **Karyawan Lapangan:** Akses operasional lapangan (Dashboard sebaran, Form Konsultasi Diagnosa Mandiri + Upload Foto Gejala, Riwayat Pribadi, serta Pelaksanaan Surat Tugas Tindakan + Upload Bukti Penanganan).
-2. **Engine Inferensi Forward Chaining & Certainty Factor:**
-   * Menghitung nilai kombinasi $CF$ secara akurat berdasarkan input keyakinan pengguna lapangan ($CF_{user}$) dan bobot kepastian pakar ($CF_{pakar}$).
-   * Indikator *Low Confidence* otomatis apabila persentase keyakinan tertinggi $< 30\%$ (mewajibkan observasi lapangan lanjutan sebelum aplikasi fungisida/bakterisida).
-3. **Audit Log Perubahan Aturan (Database Trigger):**
-   * Perekaman otomatis histori perubahan bobot CF aturan menggunakan MySQL Trigger `trg_rules_after_update` ke tabel `rule_audit_logs`.
-4. **Monitoring Sebaran Penyakit (Database View):**
-   * Agregasi data petak, diagnosa, dan sebaran penyakit menggunakan MySQL View `v_rekap_sebaran_penyakit`.
-5. **Workflow Tindakan Lapangan (Closed-Loop):**
-   * Siklus lengkap penanganan: `Petak Terinfeksi` $\rightarrow$ `Diagnosa Terbit` $\rightarrow$ `Surat Tugas Diterbitkan Pengawas` $\rightarrow$ `Karyawan Melakukan Tindakan & Upload Foto Bukti` $\rightarrow$ `Pengawas Memverifikasi & Mengubah Status Petak Kembali Menjadi Sehat`.
-6. **Ekspor & Cetak Laporan:**
-   * Fitur cetak langsung hasil diagnosa dalam format PDF/Print-ready yang rapi.
-7. **One-Command Launcher (`gas`):**
-   * Menjalankan daemon MySQL dan Laravel server sekaligus hanya dengan mengetik `gas` di terminal.
+Berikut adalah antarmuka utama implementasi sistem:
 
----
+### 1. Halaman Autentikasi / Login
+Antarmuka login dengan fitur *Quick Login (1-Click)* untuk Pengawas dan Karyawan Lapangan:
+<p align="center">
+  <img src="screenshot/halaman%20login.png" alt="Halaman Login" width="900">
+</p>
 
-## 🧮 Metodologi & Rumus Certainty Factor
+### 2. Dashboard & Panel Pengawas (Pakar)
+Panel kendali komprehensif bagi pengawas kebun mencakup statistik sebaran petak terinfeksi, verifikasi tindakan penanganan, dan manajemen basis pengetahuan:
+<p align="center">
+  <img src="screenshot/halaman%20pakar.png" alt="Dashboard Pengawas / Pakar" width="900">
+</p>
 
-Sistem menggunakan formula standar Certainty Factor (Shortliffe & Buchanan) untuk mengkuantifikasi ketidakpastian diagnosa:
-
-1. **Kaidah Dasar CF:**
-   $$CF(H, E) = MB(H, E) - MD(H, E)$$
-2. **CF Gejala Tunggal:**
-   $$CF_{tunggal} = CF(E) \times CF(H)$$
-   * $CF(E)$ = Bobot keyakinan pengguna ($0.4 = \text{Kurang Yakin}, 0.6 = \text{Cukup Yakin}, 0.8 = \text{Yakin}, 1.0 = \text{Sangat Yakin}$).
-   * $CF(H)$ = Bobot kepastian pakar tanaman ($0.05 - 1.00$).
-3. **Kombinasi CF Gejala Majemuk (Sequential Combine):**
-   $$CF_{kombinasi}(CF_1, CF_2) = CF_1 + CF_2 \times (1 - CF_1)$$
-4. **Persentase Keyakinan Akhir:**
-   $$\text{Akurasi (\%)} = CF_{akhir} \times 100\%$$
-
----
-
-## 🌿 Data Penyakit & Gejala Bibit Cabai
-
-| Kode | Nama Penyakit | Nama Latin / Patogen | Tingkat Bahaya | Jumlah Aturan |
-|:---:|:---|:---|:---:|:---:|
-| **P01** | Rebah Semai (*Damping-Off*) | *Pythium debaryanum / Rhizoctonia solani* | Kritis | 4 Gejala |
-| **P02** | Antraknosa Semai | *Colletotrichum capsici* | Tinggi | 4 Gejala |
-| **P03** | Layu Bakteri | *Ralstonia solanacearum* | Kritis | 4 Gejala |
-| **P04** | Virus Kuning / Gemini (*Bule*) | *Pepper Yellow Leaf Curl Virus (PepYLCV)* | Sedang | 3 Gejala |
-| **P05** | Bercak Daun Cercospora | *Cercospora capsici* | Sedang | 4 Gejala |
-
-*Total Gejala Basis Pengetahuan:* **16 Gejala Spesifik** (G01–G16) dengan bobot $CF_{pakar}$ terkalibrasi.
+### 3. Dashboard & Panel Karyawan Lapangan
+Antarmuka operasional karyawan lapangan untuk melakukan konsultasi diagnosa penyakit mandiri, pemilihan gejala berbobot keyakinan, dan upload bukti tindakan:
+<p align="center">
+  <img src="screenshot/halaman%20karyawan.png" alt="Dashboard Karyawan Lapangan" width="900">
+</p>
 
 ---
 
@@ -108,44 +81,148 @@ Struktur 9 tabel relasional (3NF), 1 MySQL Trigger, dan 1 Database View pada dat
 
 ---
 
-## 📸 Tangkapan Layar Aplikasi (Screenshots)
+## 📖 NASKAH LAPORAN LENGKAP SISTEM (BAB I - BAB V)
 
-Berikut adalah antarmuka antarmuka utama implementasi sistem:
-
-### 1. Halaman Autentikasi / Login
-Antarmuka login dengan fitur *Quick Login (1-Click)* untuk Pengawas dan Karyawan Lapangan:
-<p align="center">
-  <img src="screenshot/halaman%20login.png" alt="Halaman Login" width="900">
-</p>
-
-### 2. Dashboard & Panel Pengawas (Pakar)
-Panel kendali komprehensif bagi pengawas kebun mencakup statistik sebaran petak terinfeksi, verifikasi tindakan penanganan, dan manajemen basis pengetahuan:
-<p align="center">
-  <img src="screenshot/halaman%20pakar.png" alt="Dashboard Pengawas / Pakar" width="900">
-</p>
-
-### 3. Dashboard & Panel Karyawan Lapangan
-Antarmuka operasional karyawan lapangan untuk melakukan konsultasi diagnosa penyakit mandiri, pemilihan gejala berbobot keyakinan, dan upload bukti tindakan:
-<p align="center">
-  <img src="screenshot/halaman%20karyawan.png" alt="Dashboard Karyawan Lapangan" width="900">
-</p>
+### DAFTAR ISI LAPORAN
+1. **BAB I: PENDAHULUAN** (1.1 Latar Belakang, 1.2 Rumusan Masalah, 1.3 Batasan Masalah, 1.4 Tujuan, 1.5 Manfaat)
+2. **BAB II: LANDASAN TEORI & KAJIAN PUSTAKA** (2.1 Sistem Pakar, 2.2 Forward Chaining, 2.3 Certainty Factor, 2.4 Patologi Bibit Cabai, 2.5 Basis Data Lanjut MySQL, 2.6 Framework Laravel 11)
+3. **BAB III: METODOLOGI PENELITIAN & ANALISIS SISTEM** (3.1 Objek Penelitian, 3.2 Teknik Pengumpulan Data, 3.3 RAD, 3.4 Analisis As-Is vs To-Be, 3.5 Pemodelan Terstruktur)
+4. **BAB IV: PERANCANGAN BASIS DATA & IMPLEMENTASI SISTEM** (4.1 ERD, 4.2 Struktur Tabel, View & Trigger, 4.3 Basis Pengetahuan, 4.4 Algoritma CF, 4.5 Fitur Interaktif, 4.6 Pengujian PHPUnit)
+5. **BAB V: KESIMPULAN & SARAN** (5.1 Kesimpulan, 5.2 Saran Pengembangan)
+6. **DAFTAR PUSTAKA**
 
 ---
 
-## 🗄️ Struktur Basis Data Lanjut (MySQL)
+### BAB I: PENDAHULUAN
 
-### Daftar 9 Tabel Fisik
-1. `users` — Akun pengguna dengan diferensiasi peran (`pengawas` / `karyawan`) dan status aktif.
-2. `petaks` — Data master petak semai, kapasitas, jumlah bibit, dan status kesehatan (`sehat`, `waspada`, `terinfeksi`, `kosong`).
-3. `penyakits` — Data patologi penyakit bibit cabai, nama latin, tingkat bahaya, dan SOP penanganan.
-4. `gejalas` — Master 16 gejala bibit cabai, kategori bagian tanaman, dan bobot default pakar.
-5. `rules` — Aturan basis pengetahuan pakar (relasi many-to-many `penyakit_id` & `gejala_id`) dengan nilai `cf_pakar`.
-6. `diagnosas` — Header riwayat diagnosa per petak, hasil penyakit utama, skor CF akhir, dan foto gejala.
-7. `diagnosa_details` — Detail tiap gejala yang dipilih, nilai $CF_{user}$, $CF_{pakar}$, dan $CF_{kombinasi}$ per tahap.
-8. `tindakans` — Surat tugas digital pengendalian penyakit, instruktur, pelaksana, tanggal target, foto bukti, dan status.
-9. `rule_audit_logs` — Tabel histori pencatatan audit perubahan aturan basis pengetahuan.
+#### 1.1 Latar Belakang Masalah
+Sektor pertanian tanaman hortikultura, khususnya cabai (*Capsicum annum L.*), memegang peranan strategis dalam stabilitas ekonomi dan ketahanan pangan masyarakat. Fase yang paling kritis dan menentukan keberhasilan budidaya cabai adalah fase persemaian (*seedling nursery*). Pada fase umur 1 sampai 25 hari setelah semai, bibit tanaman cabai berada dalam kondisi jaringan sel yang sangat lunak dan rentan terhadap serangan berbagai patogen mikroorganisme tular tanah (*soil-borne pathogens*), jamur, bakteri, maupun virus.
 
-### MySQL Trigger (`trg_rules_after_update`)
+**Rumah Semai Helly Seedling**, yang berlokasi di Desa Sri Sawahan, Kabupaten Lampung Tengah, merupakan sentra pembibitan cabai profesional yang bertugas menyediakan bibit unggul berkualitas tinggi bagi jaringan petani cabai di wilayah Lampung Tengah dan sekitarnya. Pengelolaan persemaian dipimpin langsung oleh **Bpk. Helly Sumanto** dan didukung oleh pakar tanaman **Bpk. Ino**.
+
+Dalam operasional harian, proses pemeliharaan dan pengendalian penyakit bibit cabai di Rumah Semai Helly Seedling menghadapi beberapa kendala kritis:
+1. **Keterbatasan Kehadiran Fisik Pakar:** Pakar tanaman tidak dapat memantau setiap petak semai selama 24 jam sehari. Ketika muncul gejala anomali pada bibit, karyawan lapangan sering kali kesulitan menentukan identifikasi jenis penyakit secara akurat.
+2. **Keterlambatan Instruksi Penanganan:** Alur pelaporan manual yang berjalan masih berupa laporan lisan dari karyawan ke pengawas. Hal ini memerlukan waktu penanganan yang cukup lama dan berisiko salah interpretasi pesan, padahal penyakit seperti Rebah Semai (*Damping Off*) dapat meluas dalam waktu kurang dari 48 jam.
+3. **Ketiadaan Rekam Medis Digital Per Petak:** Pencatatan manual menyebabkan data riwayat serangan penyakit, penggunaan fungisida/pestisida, dan statistik persebaran penyakit tidak terdokumentasi dengan baik, rawan hilang, dan sulit dianalisis untuk mitigasi musim tanam berikutnya.
+4. **Perbaikan Kelemahan Konsep Awal:** Pada dokumen penelitian awal ditemukan kekeliruan penulisan judul (*typo* "DIANOGSA"), antarmuka sistem yang kaku, ketiadaan bukti foto lapangan, belum adanya audit perubahan bobot pakar di tingkat basis data, serta metode *Certainty Factor* yang bekerja secara *black box* tanpa transparansi hitungan matematis.
+
+Untuk memecahkan permasalahan di atas, dibangun sebuah **Sistem Pakar Diagnosa Penyakit Bibit Cabai Berbasis Web** yang mengadopsi metode inferensi **Forward Chaining** dan formula matematis **Certainty Factor (CF)** menggunakan framework **Laravel 11** dan basis data relasional **MySQL**.
+
+#### 1.2 Rumusan Masalah
+1. Bagaimana merancang basis data relasional ternormalisasi (3NF) pada MySQL beserta *Database View* dan *Database Trigger* untuk menampung data multi-peran, petak semai, master penyakit, gejala klinis, aturan pakar, log audit bobot, dan histori diagnosa?
+2. Bagaimana mengimplementasikan metode *Certainty Factor* (CF) yang dikombinasikan dengan *Forward Chaining* ke dalam mesin inferensi sistem pakar secara presisi, transparan, dan menangani kasus gejala dengan keyakinan rendah (*low confidence*)?
+3. Bagaimana membangun aplikasi berbasis web menggunakan Laravel 11 dengan antarmuka interaktif, validasi input yang jelas, serta pemisahan otoritas ketat antara Pengawas (Pakar) dan Karyawan Lapangan?
+
+#### 1.3 Batasan Masalah
+1. **Objek Penelitian:** Bibit tanaman cabai pada fase persemaian di Rumah Semai Helly Seedling, Desa Sri Sawahan, Kabupaten Lampung Tengah.
+2. **Subjek Pakar:** Pengetahuan patologi dan bobot keyakinan pakar bersumber dari wawancara terstruktur dengan Bpk. Helly Sumanto dan Bpk. Ino.
+3. **Cakupan Penyakit & Gejala:** Mencakup 5 penyakit utama fase semai (*Rebah Semai*, *Antraknosa Semai*, *Layu Bakteri*, *Bercak Daun Cercospora*, dan *Virus Kuning/Gemini*) serta 16 gejala klinis fisik pada daun, batang, akar, dan kondisi bibit umum.
+4. **Pembagian Hak Akses Pengguna (*RBAC*):**
+   * **Pengawas:** Hak penuh mengelola master penyakit, master gejala, aturan bobot CF pakar, denah petak semai, verifikasi pemulihan petak sehat, manajemen akun karyawan, menerbitkan surat tugas penanganan, serta melihat dan mencetak laporan statistik.
+   * **Karyawan:** Hak terbatas untuk melihat lokasi petak semai, melakukan konsultasi diagnosa gejala (beserta upload foto bukti lapangan), melihat histori diagnosa pribadi, dan mengonfirmasi penyelesaian surat tugas penanganan.
+5. **Lingkungan Pengembangan:** PHP 8.2+, Framework Laravel 11, MySQL / MariaDB, Tailwind CSS, Alpine.js, dan Chart.js.
+
+#### 1.4 Tujuan Penelitian
+1. Menghasilkan sistem basis data relasional yang kokoh, konsisten, dan dilengkapi fitur lanjut (*Database View* & *Trigger*) untuk pencatatan persemaian bibit cabai.
+2. Menerapkan algoritma *Certainty Factor* dengan audit transparansi matematis *step-by-step* serta verifikasi otomatis melalui *Unit & Feature Testing*.
+3. Membangun sistem informasi berbasis web yang responsif, interaktif, dan aman guna memangkas waktu penanganan penyakit dari pengawas ke karyawan lapangan secara *real-time*.
+
+#### 1.5 Manfaat Penelitian
+1. **Bagi Rumah Semai Helly Seedling:** Mempercepat respon penanganan bibit sakit, menekan angka kematian bibit, dan menyediakan arsip digital sebaran penyakit per bedengan.
+2. **Bagi Karyawan Lapangan:** Menjadi asisten cerdas yang memandu identifikasi gejala penyakit secara mudah di lapangan lengkap dengan bukti foto.
+3. **Bagi Dunia Akademik (Ilmu Komputer):** Menjadi referensi implementasi sistem pakar pertanian dan rekayasa basis data lanjut berbasis web Laravel 11.
+
+---
+
+### BAB II: LANDASAN TEORI & KAJIAN PUSTAKA
+
+#### 2.1 Konsep Dasar Sistem Pakar (*Expert System*)
+Sistem pakar adalah cabang kecerdasan buatan (*Artificial Intelligence*) yang mengadopsi pengetahuan pakar manusia ke dalam format komputasi. Komponen utamanya terdiri dari Basis Pengetahuan (*Knowledge Base*), Mesin Inferensi (*Inference Engine*), dan Antarmuka Pengguna (*User Interface*).
+
+#### 2.2 Metode Penalaran *Forward Chaining*
+*Forward Chaining* adalah strategi inferensi pelacakan maju yang berorientasi pada data (*data-driven reasoning*). Alur penalaran dimulai dari fakta-fakta gejala yang ditemukan karyawan di petak semai, kemudian dicocokkan dengan bagian premis (*IF*) pada basis aturan (`rules`) untuk menghasilkan kesimpulan penyakit (*THEN*).
+
+#### 2.3 Metode *Certainty Factor* (CF)
+Metode *Certainty Factor* diperkenalkan oleh Shortliffe dan Buchanan (1975) guna menangani penalaran yang mengandung ketidakpastian (*uncertainty*).
+
+$$CF(H, E) = MB(H, E) - MD(H, E)$$
+
+**Formula Perhitungan CF yang Diimplementasikan:**
+1. **CF Gejala Tunggal:**
+   $$CF_{tunggal} = CF(E) \times CF(H)$$
+   * $CF(E)$ = Bobot keyakinan pengguna lapangan ($0.4 = \text{Kurang Yakin}, 0.6 = \text{Cukup Yakin}, 0.8 = \text{Yakin}, 1.0 = \text{Sangat Yakin}$).
+   * $CF(H)$ = Bobot kepastian pakar tanaman ($0.05 - 1.00$).
+2. **CF Kombinasi (*Combine Rule*):**
+   $$CF_{kombinasi}(CF_1, CF_2) = CF_1 + CF_2 \times (1 - CF_1)$$
+3. **Persentase Keyakinan Akhir:**
+   $$\text{Akurasi (\%)} = CF_{akhir} \times 100\%$$
+   *Jika nilai persentase tertinggi $< 30\%$, sistem otomatis menandai hasil sebagai **Low Confidence** (Indikasi Belum Kuat / Perlu Observasi Lanjut).*
+
+#### 2.4 Patologi Bibit Tanaman Cabai
+Fase bibit semai cabai rentan diserang 3 golongan patogen utama:
+1. **Cendawan/Jamur Patogen:** *Pythium debaryanum / Rhizoctonia solani* (Rebah Semai), *Colletotrichum capsici* (Antraknosa Semai), *Cercospora capsici* (Bercak Daun).
+2. **Bakteri Patogen:** *Ralstonia solanacearum* (Layu Bakteri) yang ditandai layu mendadak dan jaringan batang berlendir saat dipotong.
+3. **Virus Tanaman:** *Pepper Yellow Leaf Curl Virus* (Virus Kuning / Gemini) dengan vektor kutu kebul.
+
+#### 2.5 Basis Data Relasional, Normalisasi (3NF), View, & Trigger
+Struktur database dirancang memenuhi Normalisasi 3NF untuk mencegah redundansi dan anomali manipulasi. Untuk memenuhi standar mata kuliah **Basis Data Lanjut**, sistem mengimplementasikan:
+* **Database View (`v_rekap_sebaran_penyakit`):** View agregasi multi-tabel untuk menyajikan rekapitulasi real-time petak terinfeksi.
+* **Database Trigger (`trg_rules_after_update`):** Trigger otomatis pada event `AFTER UPDATE` tabel `rules` untuk mencatat audit perubahan bobot pakar lama ke baru.
+
+#### 2.6 Framework Laravel 11 & Arsitektur MVC + Service Layer
+Aplikasi dibangun menggunakan **Laravel 11** dengan arsitektur **Model-View-Controller (MVC)** yang diperkaya dengan **Service Layer** (`CertaintyFactorService.php`) untuk pemisahan logika matematika inferensi murni dari Controller.
+
+---
+
+### BAB III: METODOLOGI PENELITIAN & ANALISIS SISTEM
+
+#### 3.1 Objek & Waktu Penelitian
+* **Tempat Penelitian:** Rumah Semai Helly Seedling, Desa Sri Sawahan, Kab. Lampung Tengah.
+* **Subjek Observasi:** Bedengan semai bibit cabai varietas Rawit Merah (Ori 212, Asmoro) dan Cabai Keriting (Castilo, Lado F1).
+
+#### 3.2 Teknik Pengumpulan Data
+1. **Observasi Lapangan:** Pengamatan visual kondisi rumah semai dan pola serangan patogen.
+2. **Wawancara Terstruktur:** Wawancara mendalam bersama Bpk. Helly Sumanto dan Bpk. Ino guna mengkalibrasi nilai $CF_{pakar}$.
+3. **Studi Pustaka & Dokumentasi:** Pengumpulan literatur fitopatologi cabai dan arsip riwayat pembibitan.
+
+#### 3.3 Metode Pengembangan Sistem (*RAD*)
+Menggunakan metode **Rapid Application Development (RAD)** yang terdiri dari 4 tahapan:
+1. *Requirements Planning*
+2. *User Design*
+3. *Construction*
+4. *Cutover*
+
+#### 3.4 Analisis Sistem Berjalan (*As-Is*) vs Sistem Usulan Baru (*To-Be*)
+
+| Parameter | Sistem Berjalan (*As-Is*) | Sistem Usulan Baru (*To-Be*) |
+|---|---|---|
+| **Media Pelaporan** | Lisan atau pesan teks manual. | Web interaktif wizard diagnosa + upload foto bukti. |
+| **Kehadiran Pakar** | Menunggu pengawas datang ke kebun. | Sistem pakar daring 24 jam berbasis CF. |
+| **Transparansi Hitungan** | Tidak terukur (*feeling*). | Persentase akurasi + rincian rumus matematis per tahap. |
+| **Distribusi & Pemulihan** | Instruksi lisan, status petak tidak terlacak. | Surat tugas digital, konfirmasi selesai semprot, & verifikasi petak sehat. |
+| **Audit Basis Pengetahuan** | Tidak ada riwayat perubahan aturan. | Tercatat otomatis oleh MySQL Trigger ke `rule_audit_logs`. |
+
+---
+
+### BAB IV: PERANCANGAN BASIS DATA & IMPLEMENTASI SISTEM
+
+#### 4.1 Perancangan Skema Database (ERD)
+Sistem memiliki 9 tabel fisik utama yang saling berelasi:
+* `users` ||--o{ `diagnosas`
+* `users` ||--o{ `tindakans`
+* `petaks` ||--o{ `diagnosas`
+* `petaks` ||--o{ `tindakans`
+* `penyakits` ||--o{ `rules`
+* `gejalas` ||--o{ `rules`
+* `penyakits` ||--o{ `diagnosas`
+* `diagnosas` ||--|{ `diagnosa_details`
+* `gejalas` ||--o{ `diagnosa_details`
+* `diagnosas` ||--o{ `tindakans`
+* `rules` ||--o{ `rule_audit_logs`
+
+#### 4.2 Struktur Tabel, Database View, & Trigger MySQL
+
+##### SQL Trigger MySQL (`trg_rules_after_update`):
 ```sql
 CREATE TRIGGER trg_rules_after_update
 AFTER UPDATE ON rules
@@ -166,7 +243,7 @@ BEGIN
 END;
 ```
 
-### MySQL Database View (`v_rekap_sebaran_penyakit`)
+##### SQL Database View MySQL (`v_rekap_sebaran_penyakit`):
 ```sql
 CREATE VIEW v_rekap_sebaran_penyakit AS
 SELECT 
@@ -186,138 +263,92 @@ LEFT JOIN penyakits py ON d.penyakit_id = py.id
 GROUP BY p.id, p.kode_petak, p.nama_petak, p.lokasi_blok, p.jenis_cabai, p.status_kesehatan, py.nama_penyakit, d.persentase;
 ```
 
+#### 4.3 Basis Pengetahuan (*Knowledge Base*) & Aturan Pakar
+Sistem memuat 5 penyakit utama dan 16 gejala klinis terkalibrasi pakar:
+* **P01 Rebah Semai (*Damping-Off*):** Batang pangkal busuk/rebah, akar membusuk, layu mendadak berkelompok.
+* **P02 Antraknosa Semai:** Bercak cokelat kehitaman melingkar pada daun/batang, mati pucuk.
+* **P03 Layu Bakteri:** Daun layu cepat saat hijau segar, lendir bakteri keluar saat pangkal dicelup air.
+* **P04 Virus Kuning (Gemini):** Helai daun menguning cerah, daun mengecil dan keriting ke atas, bibit kerdil.
+* **P05 Bercak Daun Cercospora:** Bercak bulat konsentris dengan titik putih abu-abu di bagian tengah bercak.
+
+#### 4.4 Implementasi Algoritma Engine *Certainty Factor*
+Alur logika inferensi pada `app/Services/CertaintyFactorService.php`:
+1. Menyaring gejala dengan bobot input user $CF_{user} > 0$.
+2. Mengambil relasi aturan dari database MySQL untuk seluruh penyakit yang cocok.
+3. Menghitung nilai CF tunggal per gejala: $CF_{tunggal} = CF_{user} \times CF_{pakar}$.
+4. Melakukan kombinasi berurutan (*sequential combination*):
+   $$CF_{combine} = CF_{lama} + CF_{baru} \times (1 - CF_{lama})$$
+5. Mengurutkan hasil dari persentase terbesar dan menandai status `is_low_confidence = true` jika skor tertinggi $< 30\%$.
+
+#### 4.5 Hasil Pengujian Sistem (*Automated PHPUnit Testing*)
+Seluruh pengujian unit dan fitur lulus 100% (**9 Passed, 27 Assertions**):
+* `CertaintyFactorServiceTest`: Lulus uji kombinasi formula matematis CF dan deteksi *low confidence*.
+* `AccessControlAndDiagnosaTest`: Lulus uji keamanan RBAC (karyawan diblokir dari master aturan) dan uji alur diagnosa.
+* `ExampleTest`: Lulus uji kesehatan routing dan status response aplikasi.
+
+---
+
+### BAB V: KESIMPULAN & SARAN
+
+#### 5.1 Kesimpulan
+1. Berhasil dirancang basis data relasional ternormalisasi 3NF pada MySQL (`sp_hellyseedling_cf`) dengan dukungan Database View dan Database Trigger untuk audit otomatis perubahan basis pengetahuan.
+2. Algoritma inferensi *Forward Chaining* dan metode *Certainty Factor* (CF) berhasil diterapkan secara presisi, transparan, dan terverifikasi secara matematis.
+3. Aplikasi web berbasis Laravel 11 berhasil menyajikan solusi digital terintegrasi yang memangkas waktu penanganan penyakit bibit cabai di Rumah Semai Helly Seedling.
+
+#### 5.2 Saran Pengembangan
+1. **Computer Vision:** Pengembangan modul deteksi otomatis penyakit bibit cabai menggunakan citra kamera (*Deep Learning / CNN*).
+2. **Sensor IoT Greenhouse:** Integrasi sensor kelembapan udara dan suhu tanah untuk sistem deteksi dini (*early warning system*).
+3. **Notifikasi WhatsApp:** Pengiriman notifikasi surat tugas langsung ke ponsel karyawan melalui WhatsApp Gateway API.
+
+---
+
+### DAFTAR PUSTAKA
+1. Buchanan, B. G., & Shortliffe, E. H. (1984). *Rule-Based Expert Systems: The MYCIN Experiments of the Stanford Heuristic Programming Project*. Addison-Wesley.
+2. Pressman, R. S., & Maxim, B. R. (2020). *Software Engineering: A Practitioner's Approach*. McGraw-Hill Education.
+3. Agrios, G. N. (2005). *Plant Pathology (5th Edition)*. Academic Press.
+4. Semangun, H. (2007). *Penyakit-Penyakit Tanaman Hortikultura di Indonesia*. Gadjah Mada University Press.
+5. Taylor, O. (2024). *Laravel: Up & Running: A Framework for Building Modern PHP Apps*. O'Reilly Media.
+
 ---
 
 ## 🚀 Panduan Instalasi & Menjalankan Sistem
 
 ### Prasyarat Sistem
-* PHP $\ge$ 8.2 (ekstensi aktif: `pdo_mysql`, `mbstring`, `openssl`, `zip`, `xml`, `gd`)
+* PHP $\ge$ 8.2 (ekstensi: `pdo_mysql`, `mbstring`, `zip`, `xml`, `gd`)
 * Composer $\ge$ 2.0
 * MySQL Server / XAMPP (port default `3306`)
-* Web Browser modern (Chrome / Edge / Firefox)
 
-### Langkah Instalasi
-1. **Clone repositori:**
+### Langkah Cepat Menjalankan Sistem
+1. Clone repositori & install dependensi:
    ```bash
-   git clone https://github.com/<username>/<repo-name>.git
-   cd <repo-name>
-   ```
-
-2. **Install dependensi Composer:**
-   ```bash
+   git clone https://github.com/irvanfirmansyah3747-blue/sistem-pakar-cabai-cf.git
+   cd sistem-pakar-cabai-cf
    composer install
    ```
-
-3. **Konfigurasi Environment (`.env`):**
+2. Konfigurasi `.env` & migrate database:
    ```bash
    copy .env.example .env
    php artisan key:generate
-   ```
-   Pastikan konfigurasi database di file `.env` sudah sesuai:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=sp_hellyseedling_cf
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
-
-4. **Migrasi Database & Seeding Data Pakar:**
-   ```bash
    php artisan migrate:fresh --seed
-   ```
-   *Perintah ini akan membuat 9 tabel, MySQL Trigger, MySQL View, serta mengisi seluruh data pakar dan akun default.*
-
-5. **Symlink Storage (untuk upload foto gejala & bukti tindakan):**
-   ```bash
    php artisan storage:link
    ```
-
-6. **Jalankan Aplikasi:**
-   * **Cara Cepat (Launcher Terminal):**
-     ```powershell
-     gas
-     ```
-     *Launcher `gas` akan otomatis memeriksa/menjalankan daemon MySQL dan langsung membuka server Laravel di port 8000.*
-   * **Cara Standar:**
-     ```bash
-     php artisan serve
-     ```
-   Buka browser dan akses: `http://localhost:8000`
+3. Jalankan aplikasi dengan satu perintah:
+   ```powershell
+   gas
+   ```
+   *Buka browser di `http://localhost:8000`*.
 
 ---
 
 ## 🔑 Kredensial Akun Default
 
-| Peran | Username | Password | Hak Akses |
+| Peran | Username | Password | Keterangan |
 |:---|:---|:---|:---|
-| **Pengawas (Pakar)** | `pengawas` | `password` | Akses Penuh: Kelola Master, Aturan CF, Audit Log, Tindakan & Verifikasi |
-| **Karyawan Lapangan** | `karyawan` | `password` | Akses Lapangan: Diagnosa Mandiri, Riwayat Pribadi, Eksekusi Tindakan |
-
-> **Catatan Pengujian:** Pada halaman login terdapat tombol *Quick Login (1-Click)* untuk mempermudah demonstrasi dan evaluasi sistem.
+| **Pengawas (Pakar)** | `pengawas` | `password` | Akses Penuh: Master Penyakit, Gejala, Aturan CF, Audit Log, & Verifikasi |
+| **Karyawan Lapangan** | `karyawan` | `password` | Akses Lapangan: Diagnosa Mandiri, Riwayat, & Pelaksanaan Surat Tugas |
 
 ---
 
-## 🧪 Pengujian Terotomasi (Automated Testing)
-
-Sistem telah dilengkapi dengan pengujian unit dan fitur menggunakan **PHPUnit** dengan 100% kelulusan:
-
-```bash
-php artisan test
-```
-
-**Hasil Uji:**
-```text
-PASS  Tests\Unit\CertaintyFactorServiceTest
-✓ calculate single cf returns correct product
-✓ sequential combination produces correct certainty factor
-✓ diagnose returns ranked diseases with low confidence flag
-
-PASS  Tests\Feature\AccessControlAndDiagnosaTest
-✓ unauthenticated user is redirected to login
-✓ karyawan cannot access master rules management
-✓ pengawas can access master rules management
-✓ karyawan can perform diagnosis and view result
-
-PASS  Tests\Unit\ExampleTest
-✓ that true is true
-
-PASS  Tests\Feature\ExampleTest
-✓ the application returns a successful response
-
-Tests:    9 passed (27 assertions)
-Duration: 0.85s
-```
-
----
-
-## 📂 Struktur Direktori Proyek
-
-```text
-├── app/
-│   ├── Http/Controllers/      # Controller MVC (Diagnosa, Master, Tindakan, dsb.)
-│   ├── Http/Middleware/       # RoleMiddleware (pengawas / karyawan)
-│   ├── Models/                # Eloquent Models (User, Petak, Penyakit, Gejala, Rule, dsb.)
-│   └── Services/
-│       └── CertaintyFactorService.php  # Engine inferensi CF & Forward Chaining
-├── database/
-│   ├── migrations/            # Skema 9 tabel, View, dan Trigger MySQL
-│   └── seeders/               # HellySeedlingSeeder (Data pakar, master gejala, rules)
-├── docs/
-│   └── diagrams/              # Asset visual diagram (ERD, Use Case, Activity, Flowchart)
-├── public/                    # Entry point aplikasi web
-├── resources/views/           # Blade templates dengan Tailwind CSS
-├── routes/
-│   └── web.php                # Definisi route & proteksi middleware RBAC
-├── tests/                     # Unit & Feature test suites (PHPUnit)
-├── gas.bat / gas.ps1          # Script launcher satu perintah "gas"
-└── README.md                  # Dokumentasi utama GitHub
-```
-
----
-
-## 📜 Lisensi & Hak Cipta
-
-Proyek ini dikembangkan untuk keperluan akademik dan penerapan teknologi pada operasional Rumah Semai Helly Seedling.
+## 📜 Lisensi
+Proyek ini dikembangkan untuk keperluan akademik tugas UTS Basis Data Lanjut & Proyek Skripsi pada Universitas Muhammadiyah Metro.
 Dilisensikan di bawah [MIT License](LICENSE).
