@@ -21,7 +21,10 @@ Sistem Pakar Diagnosa Penyakit Bibit Tanaman Cabai ini dikembangkan berbasis web
 * **Program Studi:** S1 Ilmu Komputer, Fakultas Ilmu Komputer, Universitas Muhammadiyah Metro
 * **Mata Kuliah:** Basis Data Lanjut (UTS) & Naskah Proyek Skripsi
 * **Narasumber Pakar:** Bpk. Helly Sumanto (Kepala Rumah Semai) & Bpk. Ino (Pakar Tanaman)
-* **Dokumen Lengkap:** [LAPORAN_LENGKAP_SISTEM_PAKAR.docx](LAPORAN_LENGKAP_SISTEM_PAKAR.docx) | [LAPORAN_LENGKAP_SISTEM_PAKAR.md](LAPORAN_LENGKAP_SISTEM_PAKAR.md)
+* **Dokumen Lengkap:** 
+  * 📥 **[Download File Word (.docx)](docs/laporan/LAPORAN_LENGKAP_SISTEM_PAKAR.docx)** *(Format Standar Skripsi A4 + 4 Diagram Lengkap)*
+  * 📄 **[Baca Laporan Markdown (.md)](docs/laporan/LAPORAN_LENGKAP_SISTEM_PAKAR.md)**
+  * 📁 **[Jelajahi Folder Dokumen Laporan](docs/laporan/)**
 
 ---
 
