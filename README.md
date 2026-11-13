@@ -105,6 +105,30 @@ Struktur 9 tabel relasional (3NF), 1 MySQL Trigger, dan 1 Database View pada dat
 
 ---
 
+## 📸 Tangkapan Layar Aplikasi (Screenshots)
+
+Berikut adalah antarmuka antarmuka utama implementasi sistem:
+
+### 1. Halaman Autentikasi / Login
+Antarmuka login dengan fitur *Quick Login (1-Click)* untuk Pengawas dan Karyawan Lapangan:
+<p align="center">
+  <img src="screenshot/halaman%20login.png" alt="Halaman Login" width="900">
+</p>
+
+### 2. Dashboard & Panel Pengawas (Pakar)
+Panel kendali komprehensif bagi pengawas kebun mencakup statistik sebaran petak terinfeksi, verifikasi tindakan penanganan, dan manajemen basis pengetahuan:
+<p align="center">
+  <img src="screenshot/halaman%20pakar.png" alt="Dashboard Pengawas / Pakar" width="900">
+</p>
+
+### 3. Dashboard & Panel Karyawan Lapangan
+Antarmuka operasional karyawan lapangan untuk melakukan konsultasi diagnosa penyakit mandiri, pemilihan gejala berbobot keyakinan, dan upload bukti tindakan:
+<p align="center">
+  <img src="screenshot/halaman%20karyawan.png" alt="Dashboard Karyawan Lapangan" width="900">
+</p>
+
+---
+
 ## 🗄️ Struktur Basis Data Lanjut (MySQL)
 
 ### Daftar 9 Tabel Fisik
