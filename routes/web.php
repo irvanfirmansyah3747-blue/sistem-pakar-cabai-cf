@@ -13,6 +13,8 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\KaryawanController;
 
 // Halaman Depan & Otentikasi
+require __DIR__ . '/test.php';
+
 Route::get('/', function () {
     return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
