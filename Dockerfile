@@ -13,6 +13,7 @@ FROM php:8.2-fpm-alpine
 RUN apk add --no-cache \
     nginx \
     supervisor \
+    ca-certificates \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
@@ -21,7 +22,7 @@ RUN apk add --no-cache \
     unzip \
     git \
     curl \
-    mysql-client
+    mysql-client && update-ca-certificates
 
 # Configure & Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
