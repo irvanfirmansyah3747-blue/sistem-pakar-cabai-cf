@@ -49,14 +49,10 @@ class AuthController extends Controller
     }
 
     /**
-     * Demo Quick Login Switcher (khusus environment local/testing)
+     * Demo Quick Login Switcher (diaktifkan untuk kemudahan demo pengujian dosen & mahasiswa)
      */
     public function quickLogin($role)
     {
-        if (!app()->environment(['local', 'testing'])) {
-            abort(403, 'Fitur demo quick-login dinonaktifkan pada mode produksi.');
-        }
-
         $user = User::where('role', $role)->where('is_active', true)->first();
         if ($user) {
             Auth::login($user);
