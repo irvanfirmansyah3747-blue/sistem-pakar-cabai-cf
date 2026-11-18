@@ -238,91 +238,113 @@
     @endif
 
     <!-- MODAL: Transparansi Rumus Matematis Certainty Factor -->
-    <div x-show="mathModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4" x-cloak>
-        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5" @click.outside="mathModalOpen = false">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+    <div x-show="mathModalOpen" 
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" 
+         x-cloak>
+        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden" 
+             @click.outside="mathModalOpen = false">
+            
+            <!-- Modal Header (Fixed) -->
+            <div class="flex items-center justify-between p-5 sm:p-6 border-b border-slate-100 flex-shrink-0 bg-slate-50/60">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-sm">
                         <i data-lucide="calculator" class="w-5 h-5"></i>
                     </div>
                     <div>
                         <h3 class="font-bold text-slate-900 text-base">Transparansi Perhitungan Certainty Factor (CF)</h3>
-                        <p class="text-xs text-slate-500">Bukti matematis langkah demi langkah pembuktian skripsi.</p>
+                        <p class="text-xs text-slate-500">Bukti matematis langkah demi langkah pembuktian inferensi skripsi.</p>
                     </div>
                 </div>
-                <button @click="mathModalOpen = false" class="text-slate-400 hover:text-slate-600">
+                <button @click="mathModalOpen = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <!-- Penjelasan Teori Rumus -->
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2 font-mono">
-                <p><strong>1. Menghitung CF Tunggal Setiap Gejala:</strong></p>
-                <p class="bg-white p-2 rounded-lg border border-slate-200 text-emerald-700 font-bold">
-                    CF[H, E] = CF[User] &times; CF[Pakar]
-                </p>
-                <p><strong>2. Menggabungkan Beberapa CF Gejala untuk Penyakit yang Sama:</strong></p>
-                <p class="bg-white p-2 rounded-lg border border-slate-200 text-emerald-700 font-bold">
-                    CF_kombinasi = CF_lama + (CF_baru &times; (1 - CF_lama))
-                </p>
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
+                <!-- Penjelasan Teori Rumus -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2 font-mono">
+                    <p><strong>1. Menghitung CF Tunggal Setiap Gejala:</strong></p>
+                    <p class="bg-white p-2.5 rounded-xl border border-slate-200 text-emerald-700 font-bold shadow-sm">
+                        CF[H, E] = CF[User] &times; CF[Pakar]
+                    </p>
+                    <p><strong>2. Menggabungkan Beberapa CF Gejala untuk Penyakit yang Sama:</strong></p>
+                    <p class="bg-white p-2.5 rounded-xl border border-slate-200 text-emerald-700 font-bold shadow-sm">
+                        CF_kombinasi = CF_lama + (CF_baru &times; (1 - CF_lama))
+                    </p>
+                </div>
+
+                <!-- Steps Real Calculation -->
+                @php
+                    $bestItem = $diagnosa->hasil_semua_penyakit_json[0] ?? null;
+                @endphp
+                @if($bestItem && !empty($bestItem['symptom_breakdowns']))
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-600">
+                                Kalkulasi untuk Penyakit: <span class="text-emerald-700 font-extrabold">{{ $bestItem['nama_penyakit'] }}</span>
+                            </h4>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                {{ count($bestItem['symptom_breakdowns']) }} Gejala Terdeteksi
+                            </span>
+                        </div>
+
+                        <!-- Gejala Tunggal -->
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100/80 border-b border-slate-200 text-slate-700 font-bold">
+                                        <th class="py-2.5 px-3">Kode</th>
+                                        <th class="py-2.5 px-3">CF User</th>
+                                        <th class="py-2.5 px-3">CF Pakar</th>
+                                        <th class="py-2.5 px-3">CF Tunggal (User &times; Pakar)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 font-mono">
+                                    @foreach($bestItem['symptom_breakdowns'] as $s)
+                                        <tr class="hover:bg-slate-50 transition">
+                                            <td class="py-2.5 px-3 font-bold text-slate-900">{{ $s['kode_gejala'] }}</td>
+                                            <td class="py-2.5 px-3 text-slate-600">{{ $s['user_weight'] }}</td>
+                                            <td class="py-2.5 px-3 text-slate-600">{{ $s['pakar_weight'] }}</td>
+                                            <td class="py-2.5 px-3 font-bold text-emerald-700">{{ $s['cf_single'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Kombinasi Steps -->
+                        @if(!empty($bestItem['cf_steps']))
+                            <div class="pt-2">
+                                <h5 class="font-bold text-xs text-slate-800 mb-2">Langkah Kombinasi (CF Combine):</h5>
+                                <div class="space-y-2 font-mono text-xs">
+                                    @foreach($bestItem['cf_steps'] as $step)
+                                        <div class="p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 text-slate-800 flex items-start gap-2">
+                                            <span class="font-bold text-emerald-800 shrink-0">Langkah {{ $step['step'] }}:</span>
+                                            <span class="text-slate-700">{{ $step['formula'] }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="mt-4 p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white font-mono text-xs flex justify-between items-center shadow-md">
+                                    <span class="font-sans font-semibold text-slate-300">Hasil Akhir Persentase Kepastian:</span>
+                                    <span class="font-bold text-emerald-400 text-base">{{ $bestItem['cf_final'] }} &times; 100% = {{ $bestItem['persentase'] }}%</span>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @endif
             </div>
 
-            <!-- Steps Real Calculation -->
-            @php
-                $bestItem = $diagnosa->hasil_semua_penyakit_json[0] ?? null;
-            @endphp
-            @if($bestItem && !empty($bestItem['symptom_breakdowns']))
-                <div class="space-y-3">
-                    <h4 class="font-bold text-xs uppercase tracking-wider text-slate-600">
-                        Kalkulasi untuk Penyakit: <span class="text-emerald-700">{{ $bestItem['nama_penyakit'] }}</span>
-                    </h4>
-
-                    <!-- Gejala Tunggal -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="border-b border-slate-200 text-slate-500">
-                                    <th class="py-2">Kode Gejala</th>
-                                    <th class="py-2">CF User</th>
-                                    <th class="py-2">CF Pakar</th>
-                                    <th class="py-2">CF Tunggal (User &times; Pakar)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 font-mono">
-                                @foreach($bestItem['symptom_breakdowns'] as $s)
-                                    <tr>
-                                        <td class="py-2 font-bold">{{ $s['kode_gejala'] }}</td>
-                                        <td class="py-2">{{ $s['user_weight'] }}</td>
-                                        <td class="py-2">{{ $s['pakar_weight'] }}</td>
-                                        <td class="py-2 font-bold text-emerald-700">{{ $s['cf_single'] }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Kombinasi Steps -->
-                    @if(!empty($bestItem['cf_steps']))
-                        <div class="mt-4 pt-4 border-t border-slate-100">
-                            <h5 class="font-bold text-xs text-slate-800 mb-2">Langkah Kombinasi (CF Combine):</h5>
-                            <div class="space-y-1.5 font-mono text-xs">
-                                @foreach($bestItem['cf_steps'] as $step)
-                                    <div class="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200 text-slate-800">
-                                        <span class="font-bold text-emerald-800">Langkah {{ $step['step'] }}:</span> {{ $step['formula'] }}
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="mt-3 p-3 rounded-xl bg-slate-900 text-white font-mono text-xs flex justify-between items-center">
-                                <span>Hasil Akhir Persentase:</span>
-                                <span class="font-bold text-emerald-400 text-sm">{{ $bestItem['cf_final'] }} &times; 100% = {{ $bestItem['persentase'] }}%</span>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            @endif
-
-            <div class="pt-3 border-t border-slate-100 flex justify-end">
-                <button type="button" @click="mathModalOpen = false" class="px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold hover:bg-slate-700 transition">
+            <!-- Modal Footer (Fixed) -->
+            <div class="p-4 px-6 border-t border-slate-100 bg-slate-50/80 flex items-center justify-between flex-shrink-0">
+                <span class="text-[11px] text-slate-500 font-medium">Metode: Certainty Factor (Shortliffe & Buchanan)</span>
+                <button type="button" @click="mathModalOpen = false" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition shadow-sm">
                     Tutup Rincian
                 </button>
             </div>
@@ -331,8 +353,8 @@
 
     <!-- MODAL: Kirim Instruksi Tindakan (Khusus Pengawas) -->
     @if(auth()->user()->isPengawas())
-        <div x-show="actionModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4" x-cloak>
-            <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-4" @click.outside="actionModalOpen = false">
+        <div x-show="actionModalOpen" class="fixed inset-0 z-[100] overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4" x-cloak>
+            <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-4" @click.outside="actionModalOpen = false">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                     <h3 class="font-bold text-slate-900 text-base">Instruksikan Penanganan ke Karyawan</h3>
                     <button @click="actionModalOpen = false" class="text-slate-400 hover:text-slate-600">

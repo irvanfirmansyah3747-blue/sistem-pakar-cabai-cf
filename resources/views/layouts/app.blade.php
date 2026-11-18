@@ -219,7 +219,7 @@
     <div class="flex-1 flex flex-col min-w-0 lg:pl-72">
         
         <!-- Top Navbar -->
-        <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80 h-16 flex items-center justify-between px-4 sm:px-8">
+        <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200/80 h-16 flex items-center justify-between px-4 sm:px-8">
             <div class="flex items-center gap-3">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
                     <i data-lucide="menu" class="w-6 h-6"></i>
@@ -249,7 +249,7 @@
         </header>
 
         <!-- Flash Notifications -->
-        <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <main class="relative z-30 flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
             @if(session('success'))
                 <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 shadow-sm animate-fade-in" x-data="{ show: true }" x-show="show">
                     <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
