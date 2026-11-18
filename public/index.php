@@ -1,20 +1,17 @@
 <?php
 
-try {
-    require __DIR__ . '/../vendor/autoload.php';
-    $app = require_once __DIR__ . '/../bootstrap/app.php';
+use Illuminate\Http\Request;
 
-    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
-    $response = $kernel->handle(
-        $request = Illuminate\Http\Request::capture()
-    );
-    $response->send();
-    $kernel->terminate($request, $response);
-} catch (\Throwable $e) {
-    header('Content-Type: text/plain; charset=utf-8', true, 500);
-    echo "=== ERROR LARAVEL TERDETEKSI ===\n";
-    echo "Pesan: " . $e->getMessage() . "\n";
-    echo "File : " . $e->getFile() . " baris " . $e->getLine() . "\n\n";
-    echo "Trace:\n" . $e->getTraceAsString() . "\n";
-    exit;
+define('LARAVEL_START', microtime(true));
+
+// Determine if the application is in maintenance mode...
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
 }
+
+// Register the Composer autoloader...
+require __DIR__.'/../vendor/autoload.php';
+
+// Bootstrap Laravel and handle the request...
+(require_once __DIR__.'/../bootstrap/app.php')
+    ->handleRequest(Request::capture());
