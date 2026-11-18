@@ -1,12 +1,19 @@
 <?php
 
-// Pastikan file database sqlite di-copy ke /tmp saat runtime
-$tmpDb = '/tmp/database.sqlite';
-$sourceDb = __DIR__ . '/../database/database.sqlite';
+// Pastikan direktori storage di /tmp dibuat untuk lingkungan Vercel Serverless
+$storageDirs = [
+    '/tmp/views',
+    '/tmp/framework/views',
+    '/tmp/framework/cache',
+    '/tmp/framework/sessions',
+    '/tmp/logs',
+];
 
-if (!file_exists($tmpDb) && file_exists($sourceDb)) {
-    @copy($sourceDb, $tmpDb);
+foreach ($storageDirs as $dir) {
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0755, true);
+    }
 }
 
-// Forward to public entrypoint
+// Forward ke entrypoint Laravel public/index.php
 require __DIR__ . '/../public/index.php';

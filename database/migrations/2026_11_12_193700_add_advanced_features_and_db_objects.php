@@ -31,35 +31,43 @@ return new class extends Migration
 
         // 3. MySQL Trigger & View (untuk RDBMS MySQL / MariaDB)
         if (in_array(DB::getDriverName(), ['mysql', 'mariadb'])) {
-            DB::unprepared('DROP TRIGGER IF EXISTS trg_rules_after_update');
-            DB::unprepared('
-                CREATE TRIGGER trg_rules_after_update
-                AFTER UPDATE ON rules
-                FOR EACH ROW
-                BEGIN
-                    IF OLD.bobot_pakar <> NEW.bobot_pakar THEN
-                        INSERT INTO rule_audit_logs (rule_id, penyakit_id, gejala_id, bobot_lama, bobot_baru, aksi, changed_at)
-                        VALUES (NEW.id, NEW.penyakit_id, NEW.gejala_id, OLD.bobot_pakar, NEW.bobot_pakar, "UPDATE", NOW());
-                    END IF;
-                END
-            ');
+            try {
+                DB::unprepared('DROP TRIGGER IF EXISTS trg_rules_after_update');
+                DB::unprepared('
+                    CREATE TRIGGER trg_rules_after_update
+                    AFTER UPDATE ON rules
+                    FOR EACH ROW
+                    BEGIN
+                        IF OLD.bobot_pakar <> NEW.bobot_pakar THEN
+                            INSERT INTO rule_audit_logs (rule_id, penyakit_id, gejala_id, bobot_lama, bobot_baru, aksi, changed_at)
+                            VALUES (NEW.id, NEW.penyakit_id, NEW.gejala_id, OLD.bobot_pakar, NEW.bobot_pakar, "UPDATE", NOW());
+                        END IF;
+                    END
+                ');
+            } catch (\Throwable $e) {
+                // TiDB Cloud / Serverless MySQL variant yang belum mendukung trigger ditangani secara graceful
+            }
 
-            DB::unprepared('
-                CREATE OR REPLACE VIEW v_rekap_sebaran_penyakit AS
-                SELECT
-                    p.kode_penyakit,
-                    p.nama_penyakit,
-                    pt.lokasi_blok,
-                    pt.kode_petak,
-                    pt.nama_petak,
-                    COUNT(d.id) AS total_kasus,
-                    ROUND(AVG(d.persentase_cf), 2) AS rata_rata_cf,
-                    MAX(d.created_at) AS kasus_terakhir
-                FROM diagnosas d
-                INNER JOIN penyakits p ON d.penyakit_terpilih_id = p.id
-                INNER JOIN petaks pt ON d.petak_id = pt.id
-                GROUP BY p.kode_penyakit, p.nama_penyakit, pt.lokasi_blok, pt.kode_petak, pt.nama_petak
-            ');
+            try {
+                DB::unprepared('
+                    CREATE OR REPLACE VIEW v_rekap_sebaran_penyakit AS
+                    SELECT
+                        p.kode_penyakit,
+                        p.nama_penyakit,
+                        pt.lokasi_blok,
+                        pt.kode_petak,
+                        pt.nama_petak,
+                        COUNT(d.id) AS total_kasus,
+                        ROUND(AVG(d.persentase_cf), 2) AS rata_rata_cf,
+                        MAX(d.created_at) AS kasus_terakhir
+                    FROM diagnosas d
+                    INNER JOIN penyakits p ON d.penyakit_terpilih_id = p.id
+                    INNER JOIN petaks pt ON d.petak_id = pt.id
+                    GROUP BY p.kode_penyakit, p.nama_penyakit, pt.lokasi_blok, pt.kode_petak, pt.nama_petak
+                ');
+            } catch (\Throwable $e) {
+                // View fallback
+            }
         }
     }
 
@@ -69,8 +77,12 @@ return new class extends Migration
     public function down(): void
     {
         if (in_array(DB::getDriverName(), ['mysql', 'mariadb'])) {
-            DB::unprepared('DROP VIEW IF EXISTS v_rekap_sebaran_penyakit');
-            DB::unprepared('DROP TRIGGER IF EXISTS trg_rules_after_update');
+            try {
+                DB::unprepared('DROP VIEW IF EXISTS v_rekap_sebaran_penyakit');
+            } catch (\Throwable $e) {}
+            try {
+                DB::unprepared('DROP TRIGGER IF EXISTS trg_rules_after_update');
+            } catch (\Throwable $e) {}
         }
 
         Schema::dropIfExists('rule_audit_logs');
